@@ -9,17 +9,19 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class PageAdapter extends FragmentPagerAdapter {
+public class PageAdapter extends FragmentStateAdapter {
 int tabCount;
 
-    public PageAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+    public PageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, int behavior) {
+        super(fragmentManager, lifecycle);
+
         tabCount = behavior;
     }
 
+
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         switch(position)
         {
             case 0: return new Tab1();
@@ -33,7 +35,7 @@ int tabCount;
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return tabCount;
     }
 }

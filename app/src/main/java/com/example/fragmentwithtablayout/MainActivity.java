@@ -1,18 +1,21 @@
 package com.example.fragmentwithtablayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     TabItem tabItem1,tabItem2,tabItem3;
-    ViewPager viewPager;
+    ViewPager2 viewPager2;
 
     PageAdapter  pageAdapter;
 
@@ -26,20 +29,19 @@ public class MainActivity extends AppCompatActivity {
         tabItem1 = findViewById(R.id.tab1);
         tabItem2 = findViewById(R.id.tab2);
         tabItem3 = findViewById(R.id.tab3);
-        viewPager = findViewById(R.id.vpager);
+        viewPager2 = findViewById(R.id.vpager);
 
-        pageAdapter = new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
-        viewPager.setAdapter(pageAdapter);
+        pageAdapter = new PageAdapter(getSupportFragmentManager(),getLifecycle(),tabLayout.getTabCount());
+        viewPager2.setAdapter(pageAdapter);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                viewPager2.setCurrentItem(tab.getPosition());
                 if(tab.getPosition()==0 || tab.getPosition()==1 || tab.getPosition()==2){
                     pageAdapter.notifyDataSetChanged();
                 }
-
-
+                
             }
 
             @Override
@@ -54,9 +56,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
 
+            @Override
+            public void onPageSelected(int position) {
+
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+
+
+        });
 
     }
 }
